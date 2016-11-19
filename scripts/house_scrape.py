@@ -20,8 +20,11 @@ for rep in house_rows:
 	cols = rep.find_all('td')
 	cols.pop(2)
 	rep_data = [base_url + cols[1].select('span > span > a')[0]['href']]
-	for col in cols:
-		rep_data.append(col.get_text())
+	for (i, col) in enumerate(cols):
+		if i is 1:
+			rep_data.append(col.select('span > span')[0].get_text())
+		else:
+			rep_data.append(col.get_text())
 	house_data.append(rep_data)
 
 filename = '../house/house_data.csv'

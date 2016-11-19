@@ -24,8 +24,11 @@ for governor in governors_rows:
 	cols.pop(3)
 	cols.pop(1)
 	governor_data = [base_url + cols[1].select('span > span > a')[0]['href']]
-	for col in cols:
-		governor_data.append(col.get_text())
+	for (i, col) in enumerate(cols):
+		if i is 1:
+			governor_data.append(col.select('span > span')[0].get_text())
+		else:
+			governor_data.append(col.get_text())
 	governors_data.append(governor_data)
 
 filename = '../governors/governors_data.csv'

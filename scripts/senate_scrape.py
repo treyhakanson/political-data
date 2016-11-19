@@ -12,16 +12,22 @@ senator_rows = senators_table.find_all('tr')
 
 header = ['Link']
 for col in senator_rows.pop(0).find_all('th')[1:]:
+	if col.get_text() in 'Portrait':
+		continue
 	header.append(col.get_text())
 
 senate_data = []
 
 for senator in senator_rows:
 	cols = senator.find_all('td')
+	cols.pop(3)
 	cols.pop(0)
-	senator_data = [base_url + cols[3].select('span > span > a')[0]['href']]
-	for col in cols:
-		senator_data.append(col.get_text())
+	senator_data = [base_url + cols[2].select('span > span > a')[0]['href']]
+	for (i, col) in enumerate(cols):
+		if i is 2:
+			senator_data.append(col.select('span > span')[0].get_text())
+		else:
+			senator_data.append(col.get_text())
 	senate_data.append(senator_data)
 
 filename = '../senate/senator_data.csv'
