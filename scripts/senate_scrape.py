@@ -1,5 +1,4 @@
 import pandas as pd
-import re
 import requests
 from bs4 import BeautifulSoup as bs
 
@@ -24,9 +23,6 @@ for senator in senator_rows:
 	for col in cols:
 		senator_data.append(col.get_text())
 	senate_data.append(senator_data)
-	
-print header
-print senate_data[0]
 
 filename = '../senate/senator_data.csv'
 df = pd.DataFrame(senate_data, columns=header)
