@@ -66,17 +66,34 @@ def getData(publication):
 				df = pd.read_csv(fullname, sep='\t')
 				for index, row in df.dropna(subset=['Terms', 'Topics']).iterrows():
 					text = row['Text']
+
+
+					article = []
+					for sentence in re.split(r' *[\.\?!][\'"\)\]]* *', row['Text']):
+						lowerWordSet = set(map(lambda word: word.lower(), sentence.split()))
+						wordSet = set(sentence.split())
+
+						topics = findTopics(lowerWordSet)
+						terms = getTermTuple(findTerms(wordSet))
+						if terms:
+							# yield (sentence, terms)
+							article.append((sentence, terms))
+					if article:
+						yield article
+
+
 					# title = row['Title']
-					terms = getTermTuple(ast.literal_eval(row['Terms']))
-					# topics = ast.literal_eval(row['Topics'])
-					yield (text, terms)
+					# terms = getTermTuple(ast.literal_eval(row['Terms']))
+					# # topics = ast.literal_eval(row['Topics'])
+					# yield (text, terms,title)
 					
 
 
-generator = getData('fox')
-while True:
-	data = next(generator)
-	print data
+# generator = getData('slate')
+# while True:
+# 	data = next(generator)
+# 	print data
+# 	break
 
 
 
