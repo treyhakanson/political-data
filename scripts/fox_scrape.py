@@ -12,7 +12,7 @@ def get_filename(i):
 
 articles_header = ['Link', 'Title', 'Text']
 
-for i in range(0, 201):
+for i in range(202, 1001):
 	json = requests.get(get_query_url(i)).json()
 	stories = json['response']['docs']
 
