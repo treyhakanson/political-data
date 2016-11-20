@@ -29,17 +29,44 @@
 		this.overlay.className = 'pg-ov';
 		this.content.appendChild(this.overlay);
 
+		var flavorText = document.createElement('div');
+		flavorText.className = 'pg-fl-txt';
+		flavorText.textContent = 'Why not check out this article instead?';
+		this.overlay.appendChild(flavorText);
+
+		this.loader = document.createElement('div');
+		this.loader.className = 'pg-loader';
+		this.loaderDiv = document.createElement('div');
+		this.loaderDiv.className = 'sk-cube-grid';
+		this.loaderDiv.innerHTML = '\
+			<div class="sk-cube sk-cube1"></div>\
+			<div class="sk-cube sk-cube2"></div>\
+			<div class="sk-cube sk-cube3"></div>\
+			<div class="sk-cube sk-cube4"></div>\
+			<div class="sk-cube sk-cube5"></div>\
+			<div class="sk-cube sk-cube6"></div>\
+			<div class="sk-cube sk-cube7"></div>\
+			<div class="sk-cube sk-cube8"></div>\
+			<div class="sk-cube sk-cube9"></div>\
+		';
+		this.loader.appendChild(this.loaderDiv);
+		this.overlay.appendChild(this.loader);
+
 		this.link = document.createElement('a');
 		this.link.className = 'pg-link';
 		this.overlay.appendChild(this.link);
 
 		this.title = document.createElement('p');
 		this.title.className = 'pg-title';
-		this.overlay.appendChild(this.title);
+		this.link.appendChild(this.title);
 
 		this.snippet = document.createElement('p');
 		this.snippet.className = 'pg-snippet';
-		this.overlay.appendChild(this.snippet);
+		this.link.appendChild(this.snippet);
+
+		this.bias = document.createElement('div');
+		this.bias.className = 'pg-bias';
+		this.overlay.appendChild(this.bias);
 
 		this.queryArr = [];
 		this.setQueryStrs = function(queryArr) {
@@ -49,6 +76,15 @@
 		this.formatQueryStrs = function() {
 			return serialize(this.queryStrs);
 		}
+
+		this.loading = function(isLoading) {
+			this.loader.style.display = (isLoading) ?
+				'block' :
+				'none';
+			this.link.style.display = (isLoading) ?
+				'none' :
+				'block';
+		}	
 
 		this.content.addEventListener('click', function(event) {
 			event.stopPropagation();
@@ -79,14 +115,44 @@
 			function _styleNodes(nodes) {
 				nodes.map(function(node) {
 					var polyglot = polyglotFactory.create('basic');
-					polyglot.title.textContent = 'this is a title';
-					polyglot.snippet.textContent = 'this is a snippet';
-					polyglot.link.href = 'https://google.com/';
-					polyglot.setQueryStrs({
-						kwarg1: 'hello world',
-						kwarg2: 'my best friend is cool',
-						kwarg3: 'some more random text'
-					});
+					polyglot.loading(true);
+
+					var atag = node.querySelector('div div span div._3ekx div div a');
+					if (atag) {// has a link
+						var link = atag.href;
+						var title = atag.textContent;
+					} else { // not a poltical article, most likely a dumb video
+						var link = null;
+						var title = null;
+					}
+
+					chrome.runtime.sendMessage({
+				      method: 'GET',
+				      action: 'xhttp',
+				      url: 'http://172.20.10.2',
+				      data: {
+			            title: title,
+			            link: link
+			        }
+				   }, function(response) {
+				      console.log(response);
+		
+						if (response) {
+							var response = response[0];
+							polyglot.loading(false);
+							polyglot.title.textContent = response.title;
+							polyglot.snippet.textContent = response.snippet;
+							polyglot.bias.textContent = response.bias;
+							polyglot.link.href = response.link;
+
+				      	chrome.storage.local.set({ sentences: response.sentences }, function() {
+				         	console.log('saved data');
+				      	});
+
+						} else {
+							polyglot.loading.innerHTML = 'Failed. Try again later.';
+						}
+				   }); 
 
 					var host = node.querySelector('div');
 					host.style.marginTop = '25px';
@@ -150,6 +216,12 @@
 	document.addEventListener('DOMNodeInserted', function(event) {
    	singletonInstance.addNodes(event.relatedNode.querySelectorAll('div.mtm > div._6m2._1zpr._dcs._4_w4'));
 	});
+
+	chrome.tabs.onUpdated.addListener(function(tabId, info, tab) {
+   if (info.status === 'complete' && !tab.url.match('facebook')) {
+       console.log('hit');
+   }
+});
 
 }());
 
