@@ -1,0 +1,28 @@
+{
+  "manifest_version": 2,
+
+  "name": "Polyglot",
+  "description": "Bursts bubbles and misconceptions by integrating all angles of a story",
+  "version": "0.4",
+  
+  "browser_action": {
+    "default_title": "Run Polyglot",
+    "default_icon": "icon.png",
+    "default_popup": "index.html"
+  },
+
+  "web_accessible_resources": [
+    "images/*"
+  ],
+
+  "content_scripts": [
+    {
+      "matches": ["*://*/*"],
+      "css": ["stylesheet.css"],
+      "js": ["sanitizer.js"]
+    }
+  ],
+
+  "permissions": ["tabs", "http://*/", "https://*/"]
+  
+}

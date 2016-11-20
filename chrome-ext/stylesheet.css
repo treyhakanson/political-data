@@ -1,0 +1,70 @@
+.pg-cont-inj {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: 999999;
+	font-family: 'Tahoma', sans-serif;
+	font-size: 1rem;
+	width: calc(100% - 20px);
+	height: 25px;
+	padding: 0 10px;
+	transition: 100ms height;
+	/* background-color gradient */
+	background: rgba(118,188,249,1);
+	background: -moz-linear-gradient(left, rgba(118,188,249,1) 0%, rgba(210,64,247,1) 51%, rgba(237,106,94,1) 100%);
+	background: -webkit-gradient(left top, right top, color-stop(0%, rgba(118,188,249,1)), color-stop(51%, rgba(210,64,247,1)), color-stop(100%, rgba(237,106,94,1)));
+	background: -webkit-linear-gradient(left, rgba(118,188,249,1) 0%, rgba(210,64,247,1) 51%, rgba(237,106,94,1) 100%);
+	background: -o-linear-gradient(left, rgba(118,188,249,1) 0%, rgba(210,64,247,1) 51%, rgba(237,106,94,1) 100%);
+	background: -ms-linear-gradient(left, rgba(118,188,249,1) 0%, rgba(210,64,247,1) 51%, rgba(237,106,94,1) 100%);
+	background: linear-gradient(to right, rgba(118,188,249,1) 0%, rgba(210,64,247,1) 51%, rgba(237,106,94,1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#76bcf9', endColorstr='#ed6a5e', GradientType=1 );
+}
+
+.pg-cont-inj:hover {
+	width: 100%;
+	padding: 0;
+	height: 100px;
+	cursor: pointer;
+	transition: 150ms height;
+}
+
+.pg-cont-inj .pg-ov {
+	background-color: rgba(0, 0, 0, 0.50);
+	width: 0;
+	height: 0;
+	opacity: 0.0;
+}
+
+.pg-ov:before {
+	opacity: 1.0;
+	transition: 100ms all;
+}
+
+.pg-cont-inj:hover .pg-ov {
+	padding: 15px;
+	width: calc(100% - 30px);
+	height: calc(100% - 30px);
+	opacity: 1.0;
+}
+
+.pg-cont-inj:hover .pg-ov:before {
+	opacity: 1.0;
+	color: white;
+	content: 'article title';
+	transition: 150ms all;
+}
+
+.pg-cont-inj img.icon {
+	float: right;
+	margin-top: 2.5px;
+	height: 20px;
+	width: 20px;
+	content: url('chrome-extension://__MSG_@@extension_id__/images/polyglot_outline.png');
+	opacity: 1.0;
+	transition: 100ms all;
+}
+
+.pg-cont-inj:hover img.icon {
+	opacity: 0.0;
+	transition: 100ms all;
+}
