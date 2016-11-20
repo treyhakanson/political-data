@@ -3,7 +3,7 @@
 
   "name": "Polyglot",
   "description": "Bursts bubbles and misconceptions by integrating all angles of a story",
-  "version": "0.4",
+  "version": "0.5",
   
   "browser_action": {
     "default_title": "Run Polyglot",
@@ -23,6 +23,11 @@
     }
   ],
 
-  "permissions": ["tabs", "http://*/", "https://*/"]
+  "permissions": [
+    "tabs",
+    "http://*/",
+    "https://*/",
+    "storage"
+  ]
   
 }

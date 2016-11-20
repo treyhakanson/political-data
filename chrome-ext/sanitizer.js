@@ -1,20 +1,58 @@
 // create context
 ;(function() {
+	// serialize query strings
+	var serialize = function(obj) {
+	  var str = [];
+	  for(var p in obj)
+	    if (obj.hasOwnProperty(p)) {
+	      str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+	    }
+	  return str.join("&");
+	}
+
 	var BasicPolyglot = function() {
+		var that = this;
+
 		this.content = document.createElement('div');
 		this.content.className = 'pg-cont-inj';
 
-		var overlay = document.createElement('div');
-		overlay.className = 'pg-ov';
-		this.content.appendChild(overlay);
+		var pgIcon = document.createElement('img');
+		pgIcon.className = 'icon';
+		this.content.appendChild(pgIcon);
 
-		var icon = document.createElement('img');
-		icon.className = 'icon';
-		this.content.appendChild(icon);
+		var headerText = document.createElement('span');
+		headerText.className = 'sm-header-text';
+		headerText.textContent = 'POLYGLOT';
+		this.content.appendChild(headerText);
+
+		this.overlay = document.createElement('div');
+		this.overlay.className = 'pg-ov';
+		this.content.appendChild(this.overlay);
+
+		this.link = document.createElement('a');
+		this.link.className = 'pg-link';
+		this.overlay.appendChild(this.link);
+
+		this.title = document.createElement('p');
+		this.title.className = 'pg-title';
+		this.overlay.appendChild(this.title);
+
+		this.snippet = document.createElement('p');
+		this.snippet.className = 'pg-snippet';
+		this.overlay.appendChild(this.snippet);
+
+		this.queryArr = [];
+		this.setQueryStrs = function(queryArr) {
+			this.queryArr = queryArr;
+		}
+
+		this.formatQueryStrs = function() {
+			return serialize(this.queryStrs);
+		}
 
 		this.content.addEventListener('click', function(event) {
 			event.stopPropagation();
-			console.log('clicked polyglot');
+			console.log('clicked polyglot: ' + that.link.href + '?' + that.formatQueryStrs());
 		});
 
 		return this;
@@ -41,6 +79,15 @@
 			function _styleNodes(nodes) {
 				nodes.map(function(node) {
 					var polyglot = polyglotFactory.create('basic');
+					polyglot.title.textContent = 'this is a title';
+					polyglot.snippet.textContent = 'this is a snippet';
+					polyglot.link.href = 'https://google.com/';
+					polyglot.setQueryStrs({
+						kwarg1: 'hello world',
+						kwarg2: 'my best friend is cool',
+						kwarg3: 'some more random text'
+					});
+
 					var host = node.querySelector('div');
 					host.style.marginTop = '25px';
 					host.insertBefore(polyglot.content, host.childNodes[0]);
